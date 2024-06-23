@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
+import { useState } from "react";
 
 let renderCount = 0;
 const FormComponent = () => {
@@ -21,11 +21,17 @@ const FormComponent = () => {
     <div>
       <h1>YouTube Form {renderCount / 2}</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label htmlFor="username">Username</label>
           {/* <input type="text" id="username" name="username" /> */}
-          <input type="text" id="username" {...register("username")} />
+          <input
+            type="text"
+            id="username"
+            {...register("username", {
+              required: " userName is required",
+            })}
+          />
         </div>
 
         <div>
