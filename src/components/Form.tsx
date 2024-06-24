@@ -11,7 +11,8 @@ const FormComponent = () => {
   });
 
   renderCount++;
-  const { register, control, handleSubmit } = useForm();
+  const { register, control, handleSubmit, formState } = useForm();
+  const { errors } = formState;
   const onSubmit = (data: any) => {
     console.log("daaa", data);
   };
@@ -29,19 +30,47 @@ const FormComponent = () => {
             type="text"
             id="username"
             {...register("username", {
-              required: " userName is required",
+              required: {
+                value: true,
+                message: "userName is required",
+              },
             })}
           />
+          <p className="error">{errors.username?.message as string}</p>
         </div>
 
-        <div>
+        <div className="form-control ">
           <label htmlFor="email">E-mail</label>
-          <input type="email" id="email" {...register("email")} />
+          <input
+            type="email"
+            id="email"
+            {...register("email", {
+              required: {
+                value: true,
+                message: "Please enter your email address",
+              },
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: " invalid email format",
+              },
+            })}
+          />
+          <p className="error">{errors.email?.message as string}</p>
         </div>
 
         <div>
           <label htmlFor="channel">Channel</label>
-          <input type="text" id="channel" {...register("channel")} />
+          <input
+            type="text"
+            id="channel"
+            {...register("channel", {
+              required: {
+                value: true,
+                message: "invalid channel name",
+              },
+            })}
+          />
+          <p className="error">{errors.channel?.message as string}</p>
         </div>
 
         <div>
