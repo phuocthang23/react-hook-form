@@ -3,6 +3,15 @@ import { DevTool } from "@hookform/devtools";
 import { useState } from "react";
 
 let renderCount = 0;
+type formValues = {
+  username: string;
+  email:string;
+  channel: string;
+  social: {
+    twitter: string;
+    facebook: string;
+  }
+}
 const FormComponent = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -11,7 +20,23 @@ const FormComponent = () => {
   });
 
   renderCount++;
-  const { register, control, handleSubmit, formState } = useForm();
+  const { register, control, handleSubmit, formState } = useForm<formValues>(
+    {
+      defaultValues: async () => {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users/1')
+        const data = await response.json()
+        return {
+          username: "thang",
+          email: data.email,
+          channel: data.channel,
+          social: {
+            twitter: "",
+            facebook:"",
+          }
+        }
+      }
+    }
+  );
   const { errors } = formState;
   const onSubmit = (data: any) => {
     console.log("daaa", data);
@@ -53,6 +78,14 @@ const FormComponent = () => {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: " invalid email format",
               },
+              validate: {
+                notAdmin: (value) => {
+                  return value !== 'admin@example.com' || ' enter other email'
+                },
+                noBlackList : (value) => {
+                  return !value.endsWith('baddomanin.com') || 'this is bad domain'
+                }
+              }
             })}
           />
           <p className="error">{errors.email?.message as string}</p>
@@ -71,6 +104,51 @@ const FormComponent = () => {
             })}
           />
           <p className="error">{errors.channel?.message as string}</p>
+        </div>
+
+        <div>
+          <label htmlFor="channel">Channel</label>
+          <input
+            type="text"
+            id="channel"
+            {...register("channel", {
+              required: {
+                value: true,
+                message: "invalid channel name",
+              },
+            })}
+          />
+          <p className="error">{errors.channel?.message as string}</p>
+        </div>
+
+        <div>
+          <label htmlFor="twitter">twitter</label>
+          <input
+            type="text"
+            id="twitter"
+            {...register("social.twitter", {
+              required: {
+                value: true,
+                message: "invalid twitter name",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.twitter?.message as string}</p>
+        </div>
+
+        <div>
+          <label htmlFor="facebook">facebook</label>
+          <input
+            type="text"
+            id="facebook"
+            {...register("social.facebook", {
+              required: {
+                value: true,
+                message: "invalid facebook name",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.facebook?.message as string}</p>
         </div>
 
         <div>
