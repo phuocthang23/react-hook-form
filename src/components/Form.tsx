@@ -5,13 +5,14 @@ import { useState } from "react";
 let renderCount = 0;
 type formValues = {
   username: string;
-  email:string;
+  email: string;
   channel: string;
   social: {
     twitter: string;
     facebook: string;
-  }
-}
+  };
+  phoneNumbers: ["", ""];
+};
 const FormComponent = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -20,23 +21,24 @@ const FormComponent = () => {
   });
 
   renderCount++;
-  const { register, control, handleSubmit, formState } = useForm<formValues>(
-    {
-      defaultValues: async () => {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users/1')
-        const data = await response.json()
-        return {
-          username: "thang",
-          email: data.email,
-          channel: data.channel,
-          social: {
-            twitter: "",
-            facebook:"",
-          }
-        }
-      }
-    }
-  );
+  const { register, control, handleSubmit, formState } = useForm<formValues>({
+    defaultValues: async () => {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users/1"
+      );
+      const data = await response.json();
+      return {
+        username: "thang",
+        email: data.email,
+        channel: data.channel,
+        social: {
+          twitter: "",
+          facebook: "",
+        },
+        phoneNumbers: ["", ""],
+      };
+    },
+  });
   const { errors } = formState;
   const onSubmit = (data: any) => {
     console.log("daaa", data);
@@ -80,12 +82,14 @@ const FormComponent = () => {
               },
               validate: {
                 notAdmin: (value) => {
-                  return value !== 'admin@example.com' || ' enter other email'
+                  return value !== "admin@example.com" || " enter other email";
                 },
-                noBlackList : (value) => {
-                  return !value.endsWith('baddomanin.com') || 'this is bad domain'
-                }
-              }
+                noBlackList: (value) => {
+                  return (
+                    !value.endsWith("baddomanin.com") || "this is bad domain"
+                  );
+                },
+              },
             })}
           />
           <p className="error">{errors.email?.message as string}</p>
@@ -142,6 +146,36 @@ const FormComponent = () => {
             type="text"
             id="facebook"
             {...register("social.facebook", {
+              required: {
+                value: true,
+                message: "invalid facebook name",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.facebook?.message as string}</p>
+        </div>
+
+        <div>
+          <label htmlFor="primary-phone">phone1</label>
+          <input
+            type="text"
+            id="facebook"
+            {...register("phoneNumbers.0", {
+              required: {
+                value: true,
+                message: "invalid facebook name",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.facebook?.message as string}</p>
+        </div>
+
+        <div>
+          <label htmlFor="primary-phone">phone1</label>
+          <input
+            type="text"
+            id="facebook"
+            {...register("phoneNumbers.0", {
               required: {
                 value: true,
                 message: "invalid facebook name",
