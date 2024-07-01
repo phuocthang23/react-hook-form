@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { useState } from "react";
 
@@ -12,14 +12,11 @@ type formValues = {
     facebook: string;
   };
   phoneNumbers: string[];
+  phoneN: {
+    number: string;
+  }[];
 };
 const FormComponent = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    channel: "",
-  });
-
   renderCount++;
   const { register, control, handleSubmit, formState } = useForm<formValues>({
     defaultValues: async () => {
@@ -36,8 +33,14 @@ const FormComponent = () => {
           facebook: "",
         },
         phoneNumbers: ["", ""],
+        phoneN: [{ number: "" }],
       };
     },
+  });
+
+  const { fields } = useFieldArray({
+    control,
+    name: "phoneN",
   });
   const { errors } = formState;
   const onSubmit = (data: any) => {
@@ -47,7 +50,7 @@ const FormComponent = () => {
   // const { name, ref, onChange, onBlur } = register("username");
   return (
     <div>
-      <h1>YouTube Form {renderCount/2}</h1>
+      <h1>YouTube Form {renderCount / 2}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
@@ -183,6 +186,10 @@ const FormComponent = () => {
             })}
           />
           <p className="error">{errors?.phoneNumbers?.[1]?.message ?? ""}</p>
+        </div>
+
+        <div>
+          <label htmlFor="">list of phone numbers </label>
         </div>
 
         <div>
