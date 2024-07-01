@@ -11,7 +11,7 @@ type formValues = {
     twitter: string;
     facebook: string;
   };
-  phoneNumbers: ["", ""];
+  phoneNumbers: string[];
 };
 const FormComponent = () => {
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ const FormComponent = () => {
   // const { name, ref, onChange, onBlur } = register("username");
   return (
     <div>
-      <h1>YouTube Form {renderCount / 2}</h1>
+      <h1>YouTube Form {renderCount/2}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
@@ -159,30 +159,30 @@ const FormComponent = () => {
           <label htmlFor="primary-phone">phone1</label>
           <input
             type="text"
-            id="facebook"
+            id="phone1"
             {...register("phoneNumbers.0", {
               required: {
                 value: true,
-                message: "invalid facebook name",
+                message: "phone 1 not emty",
               },
             })}
           />
-          <p className="error">{errors.social?.facebook?.message as string}</p>
+          <p className="error">{errors.phoneNumbers?.[0]?.message ?? ""}</p>
         </div>
 
         <div>
-          <label htmlFor="primary-phone">phone1</label>
+          <label htmlFor="second-phone">phone2</label>
           <input
             type="text"
-            id="facebook"
-            {...register("phoneNumbers.0", {
+            id="phone2"
+            {...register("phoneNumbers.1", {
               required: {
                 value: true,
-                message: "invalid facebook name",
+                message: "phone 2 not emty",
               },
             })}
           />
-          <p className="error">{errors.social?.facebook?.message as string}</p>
+          <p className="error">{errors?.phoneNumbers?.[1]?.message ?? ""}</p>
         </div>
 
         <div>
