@@ -1,6 +1,5 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { useState } from "react";
 
 let renderCount = 0;
 type formValues = {
@@ -15,6 +14,7 @@ type formValues = {
   phoneN: {
     number: string;
   }[];
+  age: number;
 };
 const FormComponent = () => {
   renderCount++;
@@ -34,11 +34,12 @@ const FormComponent = () => {
         },
         phoneNumbers: ["", ""],
         phoneN: [{ number: "" }],
+        age: 0,
       };
     },
   });
 
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "phoneN",
   });
@@ -189,7 +190,53 @@ const FormComponent = () => {
         </div>
 
         <div>
+          <label htmlFor="username">Age</label>
+          <input
+            type="number"
+            id="age"
+            {...register("age", {
+              required: {
+                value: true,
+                message: "age is required",
+              },
+            })}
+          />
+          <p className="error">{errors.age?.message as string}</p>
+        </div>
+
+        <div>
           <label htmlFor="">list of phone numbers </label>
+          <div>
+            {fields.map((field, index) => {
+              return (
+                <div className="form-control" key={field.id}>
+                  <input
+                    type="text"
+                    {...register(`phoneN.${index}.number` as const)}
+                  />
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        remove(index);
+                      }}
+                    >
+                      remove
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+            <button
+              type="button"
+              className="form-control"
+              onClick={() => {
+                append({ number: "" });
+              }}
+            >
+              add more phone number
+            </button>
+          </div>
         </div>
 
         <div>
