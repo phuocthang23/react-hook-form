@@ -1,6 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
 let renderCount = 0;
 type formValues = {
@@ -43,7 +43,15 @@ const FormComponent = () => {
     },
   });
 
-  const { register, control, handleSubmit, formState, watch, getValues } = form;
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState,
+    watch,
+    getValues,
+    setValue,
+  } = form;
 
   // fieldArray
   const { fields, append, remove } = useFieldArray({
@@ -61,16 +69,24 @@ const FormComponent = () => {
   const watchedSelectOption = watch("selectOption");
 
   // watch callback
-  // useEffect(() => {
-  //   const subscription = watch((value) => {
-  //     console.log(value);
-  //   });
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
+  useEffect(() => {
+    if (watchedSelectOption === "1") {
+      setValue("textBasedOnSelect", "Đã chọn 1");
+    } else if (watchedSelectOption === "2") {
+      setValue("textBasedOnSelect", "Đã chọn 2");
+    } else {
+      setValue("textBasedOnSelect", "");
+    }
+  }, [watchedSelectOption]);
 
   // getValue
   const hanldeGetValue = () => {
-    console.log(getValues());
+    console.log(getValues("username"));
+  };
+
+  // setValue
+  const hanldeSetValue = () => {
+    setValue("username", "");
   };
 
   return (
@@ -121,20 +137,7 @@ const FormComponent = () => {
           />
           <p className="error">{errors.email?.message as string}</p>
         </div>
-        <div>
-          <label htmlFor="channel">Channel</label>
-          <input
-            type="text"
-            id="channel"
-            {...register("channel", {
-              required: {
-                value: true,
-                message: "invalid channel name",
-              },
-            })}
-          />
-          <p className="error">{errors.channel?.message as string}</p>
-        </div>
+
         <div>
           <label htmlFor="channel">Channel</label>
           <input
@@ -286,23 +289,15 @@ const FormComponent = () => {
 
         <div>
           <label htmlFor="textBasedOnSelect">Text based on select</label>
-          <input
-            type="text"
-            {...register("textBasedOnSelect")}
-            value={
-              watchedSelectOption === "1"
-                ? "Đã chọn 1"
-                : watchedSelectOption === "2"
-                ? "Đã chọn 2"
-                : ""
-            }
-            readOnly
-          />
+          <input type="text" {...register("textBasedOnSelect")} readOnly />
         </div>
-        <div>
+        <div className="button-click">
           <button>Submit</button>
           <button type="button" onClick={hanldeGetValue}>
             get value
+          </button>
+          <button type="button" onClick={hanldeSetValue}>
+            set value
           </button>
         </div>
       </form>

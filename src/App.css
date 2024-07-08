@@ -42,3 +42,13 @@ input[type="date"] {
   margin-bottom: 5px;
   margin-top: 20px;
 }
+
+.button-click {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-click button {
+  border: 1px solid burlywood;
+}
